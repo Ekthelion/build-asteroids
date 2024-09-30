@@ -1,21 +1,34 @@
 import pygame
 from constants import *
+from player import Player
 
 def main():
     print("Starting asteroids!")
-    print(f"Screen width: {SCREEN_WIDTH}")
-    print(f"Screen height: {SCREEN_HEIGHT}")
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Asteroids")
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    clock = pygame.time.Clock()
+    dt = 0
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    updateable = pygame.sprite.Group()
+    updateable.add(player)
+    drawable = pygame.sprite.Group()
+    drawable.add(player)
     while True:
         for event in pygame.event.get():
-            pygame.Surface.fill(screen, BLACK)
-            pygame.display.flip()
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
                 return
+
+        pygame.Surface.fill(screen, BLACK)
+
+        dt = clock.tick(60) / 1000
+
+        for upd in updateable:
+            upd.update(dt)
+        for dr in drawable:
+            dr.draw(screen)
+
+        pygame.display.flip()
 
 if __name__ == '__main__':
     main()
